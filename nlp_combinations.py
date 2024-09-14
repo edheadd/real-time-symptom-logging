@@ -70,11 +70,8 @@ for i in range(len(entities)):
     if entities[i]['score'] > lowest_score and entities[i] in filtered_entities:
         to_check.add(entities[i]['word'])
         if entities[i+1]['score'] > lowest_score and entities[i+1] in filtered_entities:
-            to_check.add(entities[i]['word']+" "+entities[i+1]['word'])
-            #print(entities[i]['word']+" "+entities[i+1]['word'])
-            
+            to_check.add(entities[i]['word']+" "+entities[i+1]['word'])            
             to_check.add(entities[i+1]['word']+" "+entities[i]['word'])
-            #print(entities[i+1]['word']+" "+entities[i]['word'])
             
             
 print(to_check)
