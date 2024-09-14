@@ -14,7 +14,7 @@ patient_text = """
 """
 
 # Load your trained NER model
-model_path = '../saved_biobert_model'  # Uncomment and replace with your model paths
+model_path = '../../saved_biobert_model'  # Uncomment and replace with your model paths
 nlp = pipeline("ner", model=model_path, tokenizer=model_path)  # Using CPU
 #nlp = pipeline("ner", model=model_path, tokenizer=model_path, device=0)  # Using GPU (device=0) if available
 
@@ -62,7 +62,7 @@ lowest_score = 1
 for entity in matching_entities:
     if entity["score"] < lowest_score:
         lowest_score = entity["score"]
-print(lowest_score)
+#print(lowest_score)
 
 for i in range(len(entities)):
     if entities[i]['score'] > lowest_score and entities[i] in filtered_entities:
@@ -70,4 +70,6 @@ for i in range(len(entities)):
         if entities[i+1]['score'] > lowest_score and entities[i+1] in filtered_entities:
             to_check.add(entities[i]['word']+" "+entities[i+1]['word'])            
             to_check.add(entities[i+1]['word']+" "+entities[i]['word'])
+
+print(to_check)
             

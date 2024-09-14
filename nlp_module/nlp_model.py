@@ -6,7 +6,7 @@ class NLP_model():
 
     def __init__(self):
         # Load your trained NER model
-        model_path = '../saved_biobert_model'  # Uncomment and replace with your model paths
+        model_path = '../../saved_biobert_model'  # Uncomment and replace with your model paths
         # Determine whether to use GPU or CPU
         device = 0 if torch.cuda.is_available() else -1
         # Initialize the pipeline with the appropriate device
