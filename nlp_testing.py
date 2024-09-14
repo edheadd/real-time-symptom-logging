@@ -11,13 +11,18 @@ patient_text = """
 # Run the model to detect named entities (symptoms)
 entities = nlp(patient_text)
 
+# Initialize an empty list to store clean entities
 clean_list = []
 
 for entity in entities:
-    clean_entity = {
-        "word": entity["word"],
-        "score": entity["score"]
-    }
-    clean_list.append(clean_entity)
+    word = entity["word"]
+    if len(word) > 1:  # Filter out single-character words
+        clean_entity = {
+            "word": word,
+            "score": entity["score"]
+        }
+        clean_list.append(clean_entity)
     
-print(clean_list)
+# Print the cleaned entities
+for item in clean_list:
+    print(item["word"], ": ", item["score"])
