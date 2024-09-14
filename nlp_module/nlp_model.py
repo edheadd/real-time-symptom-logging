@@ -30,7 +30,10 @@ class NLP_model():
                 entity["score"] = entity["score"]*1.5
                 self.matching_entities.append(entity)
     
-    def get_nlp_results(self):
+    def get_nlp_results(self, text):
+        
+        self.apply_nlp(text)
+        
         to_check = set()
         lowest_score = 1
         
