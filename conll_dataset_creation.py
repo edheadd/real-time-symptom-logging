@@ -1,30 +1,26 @@
 import pandas as pd
 
-# Load the CSV
-df = pd.read_csv('symptoms.csv', header=None, names=['primary_name', 'consumer_name', 'synonyms'])
-
-# Convert 'synonyms' from string to list
-df['synonyms'] = df['synonyms'].apply(lambda x: eval(x) if isinstance(x, str) and x.startswith('[') else [])
-
-def transform_to_conll(output_file):
-    with open(output_file, 'w') as outfile:
-        for _, row in df.iterrows():
-            primary_name = row['primary_name'].strip().lower()
-            consumer_name = row['consumer_name'].strip().lower()
-            synonyms = row['synonyms']
-            
-            # Combine all terms
-            keywords = [primary_name, consumer_name] + [synonym.strip().lower() for synonym in synonyms]
-            
-            # Write to file
-            for word in keywords:
-                if len(word) > 1:
-                    outfile.write(f'{word}\tB-TERM\n')
-                else:
-                    outfile.write(f'{word}\tO\n')
-            
-            # Add a newline to separate entries
-            outfile.write('\n')
+def conll_to_csv(conll_file, output_csv):
+    data = []
+    with open(conll_file, 'r') as infile:
+        term_label_pair = []
+        for line in infile:
+            line = line.strip()
+            if line:  # If the line is not empty
+                term, label = line.split('\t')
+                term_label_pair.append((term, label))
+            else:  # If the line is empty, it means a new entry is starting
+                if term_label_pair:  # Avoid writing if no data was collected
+                    data.extend(term_label_pair)
+                    term_label_pair = []
+        
+        # If there's any remaining data after the last entry
+        if term_label_pair:
+            data.extend(term_label_pair)
+    
+    # Create a DataFrame and write it to CSV
+    df = pd.DataFrame(data, columns=['term', 'label'])
+    df.to_csv(output_csv, index=False)
 
 # Example usage:
-transform_to_conll('conll_data.conll')
+conll_to_csv('conll_data.conll', 'output_data.csv')
