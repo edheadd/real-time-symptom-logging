@@ -1,7 +1,6 @@
 import sounddevice as sd
 import speech_recognition as sr
 import numpy as np
-import keyboard  # To detect key press
 
 class voice_recognizer:
     def __init__(self, samplerate=16000, channels=1, dtype='int16'):
@@ -10,21 +9,27 @@ class voice_recognizer:
         self.channels = channels
         self.dtype = dtype
         self.recorded_audio = []
+        self.is_recording = False  # Control the recording state externally
 
-    def record_audio(self):
-        """Start recording audio until the 's' key is pressed."""
-        print("Listening... Press 's' to stop recording.")
+    def start_recording(self):
+        """Start recording audio."""
+        self.recorded_audio = []  # Clear previous audio data
+        self.is_recording = True  # Set flag to start recording
+        print("Listening...")
+
         with sd.InputStream(samplerate=self.samplerate, channels=self.channels, dtype=self.dtype) as stream:
-            while True:
-                if keyboard.is_pressed('s'):
-                    print("\n'S' key pressed. Stopping recording...")
-                    break  # Stop recording when 's' key is pressed
-                
+            while self.is_recording:  # Continue recording while the flag is true
                 # Read small chunks of audio data
                 audio_chunk, overflowed = stream.read(1024)
                 if overflowed:
                     print("Audio overflow occurred.")
                 self.recorded_audio.append(audio_chunk)
+
+        print("Recording stopped.")
+
+    def stop_recording(self):
+        """Stop recording by setting the flag to False."""
+        self.is_recording = False  # Stop the recording loop
 
     def process_audio(self):
         """Process the recorded audio into a recognizable format."""

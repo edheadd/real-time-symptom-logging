@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech to Text</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #transcription {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .button {
+            display: block;
+            margin: auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Real Time Symptom Logging</h1>
+        <button class="button" id="recordBtn">Start Recording</button>
+        <div id="transcription">
+            <h2>Transcribed Text:</h2>
+            <p id="message">Press 'Start Recording' to begin.</p>
+        </div>
+    </div>
+
+    <script>
+        let isRecording = false;  // Flag to toggle between recording and stopping
+
+        document.getElementById('recordBtn').addEventListener('click', function() {
+            const button = document.getElementById('recordBtn');
+
+            if (!isRecording) {
+                // Start recording
+                isRecording = true;
+                button.textContent = "Stop Recording";  // Change button text
+
+                fetch('/start_recording', {method: 'POST'})  // Start recording
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);  // Show start message in console
+                });
+
+            } else {
+                // Stop recording
+                isRecording = false;
+                button.textContent = "Start Recording";  // Reset button text
+
+                fetch('/stop_recording', {method: 'POST'})  // Stop recording
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('message').textContent = data.message || "No transcription available.";
+                });
+            }
+        });
+    </script>
+</body>
+</html>
