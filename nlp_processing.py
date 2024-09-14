@@ -30,6 +30,7 @@ def find_symptoms(words, symptom_df):
         keywords.append(consumer_name)
         for synonym in synonyms:
             keywords.append(synonym.rstrip().lower())
+            
         for word in words:
             if word in keywords:
                 detected_conditions.append(f"{primary_name} ({consumer_name})")
