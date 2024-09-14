@@ -33,4 +33,4 @@ def stop_recording():
     return jsonify({"nlp_results": nlp_results})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
