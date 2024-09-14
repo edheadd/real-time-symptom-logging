@@ -1,4 +1,4 @@
-from audio_recorder import AudioToTextRecorder
+from ttc.audio_recorder import AudioToTextRecorder
 def main():
     
     recorder = AudioToTextRecorder()
