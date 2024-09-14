@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+from transformers import pipelines
 
 
 # Load the CSV
@@ -10,7 +11,7 @@ df['synonyms'] = df['synonyms'].apply(lambda x: eval(x) if isinstance(x, str) an
 
 # To be replaced by tts module
 patient_text = """
-    i have had a persistent cough, fever, and fatigue over the last few days. i also have scarlet fever.
+    i have had a persistent cough, fever, and fatigue over the last few days. i also have scarlet fever. and I have my breast removed.
 """
 
 def clean_word(word):
