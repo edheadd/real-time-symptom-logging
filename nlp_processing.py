@@ -1,6 +1,5 @@
 import pandas as pd
 import re
-from transformers import pipelines
 
 
 # Load the CSV
