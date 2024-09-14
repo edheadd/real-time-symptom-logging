@@ -10,7 +10,7 @@ df['synonyms'] = df['synonyms'].apply(lambda x: eval(x) if isinstance(x, str) an
 
 # To be replaced by tts module
 patient_text = """
-    i have had a persistent cough, fever, and fatigue over the last few days.
+    i have had a persistent cough, fever, and fatigue over the last few days. i also have scarlet fever.
 """
 
 def clean_word(word):
@@ -21,15 +21,14 @@ words = [clean_word(word).lower() for word in patient_text.split()]
 def find_symptoms(words, symptom_df):
     detected_conditions = []
     for _, row in symptom_df.iterrows():
-        primary_name = row['primary_name']
-        consumer_name = row['consumer_name']
+        primary_name = row['primary_name'].rstrip().lower()
+        consumer_name = row['consumer_name'].rstrip().lower()
         synonyms = row['synonyms']
         keywords = []
         keywords.append(primary_name)
         keywords.append(consumer_name)
         for synonym in synonyms:
-            keywords.append(synonym)
-        
+            keywords.append(synonym.rstrip().lower())
         for word in words:
             if word in keywords:
                 detected_conditions.append(f"{primary_name} ({consumer_name})")
