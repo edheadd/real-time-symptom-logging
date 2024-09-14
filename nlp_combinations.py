@@ -44,14 +44,37 @@ symptoms_list = [word for word in symptoms_list if len(word) > 3]
 # Filter out words and sort entities by their scores in descending order
 filtered_entities = [entity for entity in entities if len(entity['word']) > 3]
 
+matching_entities = []
+
 # Print matching words
 for entity in filtered_entities:
     if entity["word"] in symptoms_list:
         entity["score"] = entity["score"]*1.5
-        print(entity["word"])
+        matching_entities.append(entity)
 
 sorted_entities = sorted(filtered_entities, key=lambda x: x['score'], reverse=True)
 
 # Print words and scores in order of greatest to least score
-for entity in sorted_entities:
-    print(f"Word: {entity['word']}, Score: {entity['score']:.4f}")
+#for entity in sorted_entities:
+#    print(f"Word: {entity['word']}, Score: {entity['score']:.4f}")
+
+to_check = set()
+
+lowest_score = 1
+for entity in matching_entities:
+    if entity["score"] < lowest_score:
+        lowest_score = entity["score"]
+print(lowest_score)
+
+for i in range(len(entities)):
+    if entities[i]['score'] > lowest_score and entities[i] in filtered_entities:
+        to_check.add(entities[i]['word'])
+        if entities[i+1]['score'] > lowest_score and entities[i+1] in filtered_entities:
+            to_check.add(entities[i]['word']+" "+entities[i+1]['word'])
+            #print(entities[i]['word']+" "+entities[i+1]['word'])
+            
+            to_check.add(entities[i+1]['word']+" "+entities[i]['word'])
+            #print(entities[i+1]['word']+" "+entities[i]['word'])
+            
+            
+print(to_check)
