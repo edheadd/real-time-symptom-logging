@@ -2,7 +2,6 @@ from flask import Flask, render_template, jsonify
 import sys, os
 import threading  # For non-blocking recording
 import nlp_module.nlp_model as nlp
-import nlp_module.process_symptoms as ps
 
 # Add the parent directory (project_root) to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
