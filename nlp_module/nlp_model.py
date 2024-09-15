@@ -15,6 +15,8 @@ class NLP_model():
         self.entities = []
         self.filtered_entities = []
         self.matching_entities = []
+        
+        self.symp_process = process_symptoms.symptom_processing()
 
     def apply_nlp(self, text):
         # Extract entities
@@ -22,12 +24,13 @@ class NLP_model():
         
         self.filtered_entities = [entity for entity in self.entities if len(entity['word']) > 3]
         
-        symptoms_list = process_symptoms.symptoms.get_symptoms_list();
+        symptoms_list = self.symp_process.get_symptoms_list();
         
         # Print matching words
+        self.matching_entities = []
         for entity in self.filtered_entities:
             if entity["word"] in symptoms_list:
-                entity["score"] = entity["score"]*1.5
+                entity["score"] = entity["score"]*3
                 self.matching_entities.append(entity)
     
     def get_nlp_results(self, text):
@@ -42,7 +45,7 @@ class NLP_model():
                 lowest_score = entity["score"]
 
         for i in range(len(self.entities)):
-            if self.entities[i]['score'] > lowest_score and self.entities[i] in self.matching_entities:
+            if self.entities[i]['score'] >= lowest_score and self.entities[i] in self.matching_entities:
                 to_check.add(self.entities[i]['word'])
                 if (i+1) < len(self.entities):
                     if self.entities[i+1]['score'] > lowest_score and self.entities[i+1] in self.matching_entities:

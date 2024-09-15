@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <title>Speech to Text</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Lato", sans-serif;
+            background-color: #f5f5f5; /* Added background color */
             margin: 0;
             padding: 20px;
         }
@@ -28,33 +30,101 @@
             background-color: #fff;
             border-radius: 5px;
             margin-top: 20px;
+            min-height: 300px;
         }
 
         .button {
             display: block;
             margin: auto;
+            margin-top: 10px;
             padding: 10px 20px;
             font-size: 16px;
             color: white;
-            background-color: #007bff;
+            background-color: rgba(0, 123, 255, 0.7); /* Transparent blue by default */
             border: none;
             border-radius: 5px;
             cursor: pointer;
             text-align: center;
+            transition: background-color 0.3s;
         }
 
         .button:hover {
-            background-color: #0056b3;
+            background-color: rgba(0, 123, 255, 0.5);
+        }
+
+        /* Styles for the top bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(51, 51, 51, 0.7); /* Semi-transparent dark background */
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 999;
+        }
+
+        /* Styling for the "Home" and "Show App Description" buttons */
+        .navbar a, .navbar button {
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            margin-left: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        /* Hover effect */
+        .navbar a:hover, .navbar button:hover {
+            background-color: rgba(68, 68, 68, 0.7);
+        }
+
+        /* Padding to avoid content being hidden behind navbar */
+        body {
+            padding-top: 60px;
+        }
+
+        /* Hidden description */
+        #description {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #eee;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
+    <!-- Navbar with Home link and Show App Description button -->
+    <div class="navbar">
+        <a href="#" class="home-button">Home</a>
+        <button id="descriptionBtn">Show App Description</button>
+    </div>
+
     <div class="container">
-        <h1>Real Time Symptom Logging</h1>
+        <h1>Real Time Symptoms Logging</h1>
+
+        <!-- Start/Stop Recording Button -->
         <button class="button" id="recordBtn">Start Recording</button>
+
+        <!-- App description section (hidden by default) -->
+        <div id="description">
+            <h2>About this App</h2>
+            <p>
+                This application allows users to log their symptoms in real-time using speech recognition technology. It enables patients to 
+                quickly and accurately record their symptoms without manually typing. This is especially useful for long-term tracking and 
+                sharing data with healthcare providers.
+            </p>
+        </div>
+
         <div id="transcription">
-            <h2>Transcribed Text:</h2>
-            <p id="message">Press 'Start Recording' to begin.</p>
+            <h2>Patient Information:</h2>
+            <pre><p id="message">Press 'Start Recording' to begin</p></pre>
         </div>
     </div>
 
@@ -68,6 +138,7 @@
                 // Start recording
                 isRecording = true;
                 button.textContent = "Stop Recording";  // Change button text
+                button.style.backgroundColor = 'rgba(255, 0, 0, 0.7)';  // Change to red when recording
 
                 fetch('/start_recording', {method: 'POST'})  // Start recording
                 .then(response => response.json())
@@ -79,12 +150,27 @@
                 // Stop recording
                 isRecording = false;
                 button.textContent = "Start Recording";  // Reset button text
+                button.style.backgroundColor = 'rgba(0, 123, 255, 0.7)';  // Change back to blue when stopped
 
                 fetch('/stop_recording', {method: 'POST'})  // Stop recording
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('message').textContent = data.message || "No transcription available.";
                 });
+            }
+        });
+
+        // Toggle Description visibility
+        document.getElementById('descriptionBtn').addEventListener('click', function() {
+            const description = document.getElementById('description');
+            const button = document.getElementById('descriptionBtn');
+            
+            if (description.style.display === 'none') {
+                description.style.display = 'block';
+                button.textContent = "Hide App Description";
+            } else {
+                description.style.display = 'none';
+                button.textContent = "Show App Description";
             }
         });
     </script>
