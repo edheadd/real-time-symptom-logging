@@ -41,7 +41,7 @@ df['consumer_name'] = df['consumer_name'].apply(preprocess_text)
 df['synonyms'] = df['synonyms'].apply(preprocess_text)
 
 # Define the search string (case-insensitive)
-search_string = 'AIDS'  # Replace with your actual search string
+search_string = 'Adenotonsillar hypertrophy'  # Replace with your actual search string
 search_string = preprocess_text(search_string)  # Preprocess the search string
 
 # Function to check if the search string exactly matches any of the combined strings
@@ -49,19 +49,30 @@ def search_in_row(row):
     combined_strings = [preprocess_text(cell) for cell in row]
     return search_string in combined_strings
 
-# Search for the string in each row and retrieve the first two columns
+# Use a set to keep track of unique rows
 result = []
+unique_primary_names = set()  # Use a set to track unique primary names
+
+# Search for the string in each row and retrieve the first two columns
 for index, row in df.iterrows():
+    primary_name = row['primary_name']
+    consumer_name = row['consumer_name']
+
+    # Assuming search_in_row is a function that returns True or False
     if search_in_row([row['primary_name'], row['consumer_name'], row['synonyms']]):
-        result.append({
-            'primary_name': row['primary_name'],
-            'consumer_name': row['consumer_name'],
-            'synonyms': row['synonyms']
-        })
+        # Check if the primary_name is not already in the set
+        if primary_name not in unique_primary_names:
+            # Add primary_name to the set
+            unique_primary_names.add(primary_name)
+            # Append the row to the result
+            result.append({
+                'primary_name': primary_name,
+                'consumer_name': consumer_name
+            })
 
 # Print the results
 for item in result:
     if item['primary_name'] != item['consumer_name']:
-        print(f"Primary Name: {item['primary_name']}, Consumer Name: {item['consumer_name']}, Synonyms: {item['synonyms']}")
+        print(f"Primary Name: {item['primary_name']}, Consumer Name: {item['consumer_name']}")
     else:
-         print(f"Primary Name: {item['primary_name']}")
+        print(f"Primary Name: {item['primary_name']}")
