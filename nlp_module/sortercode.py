@@ -31,13 +31,23 @@ df['primary_name'] = df['primary_name'].apply(convert_value_to_string)
 df['consumer_name'] = df['consumer_name'].apply(convert_value_to_string)
 df['synonyms'] = df['synonyms'].apply(lambda x: ' '.join(x))
 
-# Define the search string (exact match, case-sensitive, without spaces)
-search_string = 'AIDS'  # Replace with your actual search string
+# Function to preprocess text (convert to lowercase and strip trailing spaces)
+def preprocess_text(text):
+    return text.lower().rstrip()
 
-# Function to check if the search string is in any of the combined strings
+# Apply preprocessing to the DataFrame columns
+df['primary_name'] = df['primary_name'].apply(preprocess_text)
+df['consumer_name'] = df['consumer_name'].apply(preprocess_text)
+df['synonyms'] = df['synonyms'].apply(preprocess_text)
+
+# Define the search string (case-insensitive)
+search_string = 'AIDS'  # Replace with your actual search string
+search_string = preprocess_text(search_string)  # Preprocess the search string
+
+# Function to check if the search string exactly matches any of the combined strings
 def search_in_row(row):
-    combined_string = ' '.join(row)
-    return search_string in combined_string
+    combined_strings = [preprocess_text(cell) for cell in row]
+    return search_string in combined_strings
 
 # Search for the string in each row and retrieve the first two columns
 result = []
@@ -52,6 +62,6 @@ for index, row in df.iterrows():
 # Print the results
 for item in result:
     if item['primary_name'] != item['consumer_name']:
-        print(f"Primary Name: {item['primary_name']}, Consumer Name: {item['consumer_name']}")
+        print(f"Primary Name: {item['primary_name']}, Consumer Name: {item['consumer_name']}, Synonyms: {item['synonyms']}")
     else:
-        print(f"Primary Name: {item['primary_name']}")
+         print(f"Primary Name: {item['primary_name']}")
