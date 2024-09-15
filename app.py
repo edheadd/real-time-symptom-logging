@@ -29,8 +29,10 @@ def stop_recording():
     recognizer.stop_recording()
     translated_message = recognizer.recognize_speech()
     nlp_results = nat_lang_processor.get_nlp_results(translated_message)
+    nlp_results = list(nlp_results)
     # perfrom processing w nlp results
-    return jsonify({"nlp_results": nlp_results})
+    print(nlp_results)
+    return jsonify({"message": nlp_results})
 
 if __name__ == '__main__':
     app.run(debug=False)

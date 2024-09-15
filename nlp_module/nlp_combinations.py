@@ -14,7 +14,7 @@ patient_text = """
 """
 
 # Load your trained NER model
-model_path = '../../saved_biobert_model'  # Uncomment and replace with your model paths
+model_path = '../../saved_biobert_model'
 nlp = pipeline("ner", model=model_path, tokenizer=model_path)  # Using CPU
 #nlp = pipeline("ner", model=model_path, tokenizer=model_path, device=0)  # Using GPU (device=0) if available
 

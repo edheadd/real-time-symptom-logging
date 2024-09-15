@@ -1,12 +1,12 @@
 from transformers import pipeline
 import torch
-from process_symptoms import get_symptoms_list
+import nlp_module.process_symptoms as process_symptoms
 
 class NLP_model():
 
     def __init__(self):
         # Load your trained NER model
-        model_path = '../../saved_biobert_model'  # Uncomment and replace with your model paths
+        model_path = 'C://Users//ebexi//OneDrive//Documents//i hate life//saved_biobert_model'
         # Determine whether to use GPU or CPU
         device = 0 if torch.cuda.is_available() else -1
         # Initialize the pipeline with the appropriate device
@@ -22,7 +22,7 @@ class NLP_model():
         
         self.filtered_entities = [entity for entity in self.entities if len(entity['word']) > 3]
         
-        symptoms_list = get_symptoms_list();
+        symptoms_list = process_symptoms.symptoms.get_symptoms_list();
         
         # Print matching words
         for entity in self.filtered_entities:
@@ -42,10 +42,11 @@ class NLP_model():
                 lowest_score = entity["score"]
 
         for i in range(len(self.entities)):
-            if self.entities[i]['score'] > lowest_score and self.entities[i] in self.filtered_entities:
+            if self.entities[i]['score'] > lowest_score and self.entities[i] in self.matching_entities:
                 to_check.add(self.entities[i]['word'])
-                if self.entities[i+1]['score'] > lowest_score and self.entities[i+1] in self.filtered_entities:
-                    to_check.add(self.entities[i]['word']+" "+self.entities[i+1]['word'])            
-                    to_check.add(self.entities[i+1]['word']+" "+self.entities[i]['word'])
+                if (i+1) < len(self.entities):
+                    if self.entities[i+1]['score'] > lowest_score and self.entities[i+1] in self.matching_entities:
+                        to_check.add(self.entities[i]['word']+" "+self.entities[i+1]['word'])            
+                        to_check.add(self.entities[i+1]['word']+" "+self.entities[i]['word'])
                     
         return to_check
