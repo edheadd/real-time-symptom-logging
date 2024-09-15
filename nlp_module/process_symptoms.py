@@ -5,7 +5,7 @@ import ast
 class symptom_processing():
     
     def __init__(self):
-        self.df = pd.read_csv('C://Users//ebexi//OneDrive//Documents//i hate life//real-time-symptom-logging//nlp_module//symptoms.csv', 
+        self.df = pd.read_csv('nlp_module/symptoms.csv', 
                               header=None, 
                               names=['primary_name', 'consumer_name', 'synonyms'])
         
@@ -15,7 +15,7 @@ class symptom_processing():
     def get_symptoms_list(self):
         
         # Open the CSV
-        df = pd.read_csv('C://Users//ebexi//OneDrive//Documents//i hate life//real-time-symptom-logging//nlp_module//symptoms.csv', 
+        df = pd.read_csv('nlp_module/symptoms.csv', 
                               header=None, 
                               names=['primary_name', 'consumer_name', 'synonyms'])
         
